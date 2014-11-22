@@ -1,0 +1,105 @@
+# Proactical Machine Learning Prediction Assignment
+
+##Libraries
+
+I've noticed that the caret package run times were extremely long and, therefore, I've used the [randomForest](http://cran.r-project.org/web/packages/randomForest/randomForest.pdf) package and the [doParallel](http://cran.r-project.org/web/packages/doParallel/vignettes/gettingstartedParallel.pdf).
+
+The complete list of imported packages are:
+```
+library(Hmisc)
+library(caret)
+library(randomForest)
+library(foreach)
+library(doParallel)
+```
+
+I made use of a seed value for consistent results ```set.seed(998)```.
+
+## Loading Training and Testing Sets
+
+First, I loaded the data both from the provided training and test data.
+```
+training.file   <- 'pml-training.csv'
+test.cases.file <- 'pml-test.csv'
+training.url    <- 'http://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv'
+test.cases.url  <- 'http://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv'
+
+download.file(training.url, training.file)
+download.file(test.cases.url,test.cases.file )
+```
+
+## Cleaning Data
+
+The training and trsting sets contained error strings "#DIV/0!" or empty strings. They are replaced with "NA" values. Also, any columns (unuseful information) containing 'NA' are removed from both downloaded data sets.
+```
+training.df   <-read.csv(training.file, na.strings=c("NA","#DIV/0!", ""))
+test.cases.df <-read.csv(test.cases.file , na.strings=c("NA", "#DIV/0!", ""))
+training.df<-training.df[,colSums(is.na(training.df)) == 0]
+test.cases.df <-test.cases.df[,colSums(is.na(test.cases.df)) == 0]
+```
+
+The following fields are also removed:
+* user_name
+* raw_timestamp_part_1
+* raw_timestamp_part_2
+* cvtd_timestamp
+* new_window
+* num_window
+using this code:
+```
+training.df   <-training.df[,-c(1:7)]
+test.cases.df <-test.cases.df[,-c(1:7)]
+```
+
+##Cross Validation
+Cross validation was achieved by splitting the training data into a test set and a training set using the following:
+```
+inTraining.matrix    <- createDataPartition(training.df$classe, p = 0.75, list = FALSE)
+training.data.df <- training.df[inTraining.matrix, ]
+testing.data.df  <- training.df[-inTraining.matrix, ]
+```
+
+## Use of random forests and parallel processing
+We now build 4 random forests with 250 trees each. We make use of parallel processing to build this model. This provided a great speedup.
+```
+registerDoParallel()
+classe <- training.data.df$classe
+variables <- training.data.df[-ncol(training.data.df)]
+
+rf <- foreach(ntree=rep(250, 4), .combine=randomForest::combine, .packages='randomForest') %dopar% {
+randomForest(variables, classe, ntree=ntree) 
+}
+```
+
+##Predictions
+
+Predict and generate the confusion matrix for the training and test sets.
+```
+training.predictions <- predict(rf, newdata=training.data.df)
+confusionMatrix(training.predictions,training.data.df$classe)
+
+testing.predictions <- predict(rf, newdata=testing.data.df)
+confusionMatrix(testing.predictions,testing.data.df$classe)
+```
+
+##Conclusions
+
+As can be seen from the confusion matrix this model is very accurate.
+To conclude the submission, I've used the Coursera code and predict the `answers` to the 20 questions.
+```
+pml_write_files = function(x){
+  n = length(x)
+  for(i in 1:n){
+    filename = paste0("problem_id_",i,".txt")
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
+
+x <- evaluation_data
+x <- x[feature_set[feature_set!='classe']]
+answers <- predict(rf, newdata=x)
+
+answers
+
+pml_write_files(answers)
+```
