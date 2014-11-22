@@ -1,6 +1,6 @@
 # Practical Machine Learning
 
-In the following, you can read the comments of the code.
+In the following, you can read the comments to the code.
 
 ##Libraries
 

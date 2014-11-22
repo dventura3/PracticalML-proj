@@ -1,4 +1,4 @@
 PracticalML-proj
 ================
 
-Practical Machine Learning
+My project for the Johns Hopkins Practical-ML course.

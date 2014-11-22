@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta name="generator" content="pandoc" />
+
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+</head>
+
+<body>
+
+<style type="text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+<h2>Practical Machine Learning - Prediction Assignment Writeup</h2>
+
+The goal of the project was  to determine what activity an individual perform using a data set provide by <a href="http://groupware.les.inf.puc-rio.br/">Groupware</a>.
+
+<p>Here, I discuss and compare the results from the training and testing sets using confusion matricies and statistics. A more detailed explaination of the R-Code and how it works can be found in the .Rmd file in this repository.
+
+Accuracy of training compared to testing is 1.0 to 0.9951 indicating training for test prediction are accurate. Sensitivity are 1.0 to 0.9993 meaning that the model  predictions predict "Classe" membership nearly 100% of the time. Specificity are 1.0 to 0.9986 that the model predictions predict "Non-Classe" membership nearly 100% of the time. In conclusion, the model is well-trained and is very accurate.</p>
+
+<p>Following are the raw Confusion Matricies and Statistics results:</p>
+
+<pre><code>## Confusion Matrix and Statistics Training Set (75% Total Data Set)
+#          Reference
+# Prediction    A    B    C    D    E
+#         A 4185    0    0    0    0
+#         B    0 2848    0    0    0
+#         C    0    0 2567    0    0
+#         D    0    0    0 2412    0
+#         E    0    0    0    0 2706
+</code></pre>
+
+<pre><code>
+# Overall Statistics
+#                                     
+#               Accuracy : 1          
+#                 95% CI : (0.9997, 1)
+#    No Information Rate : 0.2843     
+#    P-Value [Acc > NIR] : < 2.2e-16  
+#                                     
+#                  Kappa : 1          
+# Mcnemar's Test P-Value : NA 
+</code></pre>
+
+<pre><code>
+# Statistics by Class:
+#
+#                     Class: A Class: B Class: C Class: D Class: E
+# Sensitivity            1.0000   1.0000   1.0000   1.0000   1.0000
+# Specificity            1.0000   1.0000   1.0000   1.0000   1.0000
+# Pos Pred Value         1.0000   1.0000   1.0000   1.0000   1.0000
+# Neg Pred Value         1.0000   1.0000   1.0000   1.0000   1.0000
+# Prevalence             0.2843   0.1935   0.1744   0.1639   0.1839
+# Detection Rate         0.2843   0.1935   0.1744   0.1639   0.1839
+# Detection Prevalence   0.2843   0.1935   0.1744   0.1639   0.1839
+# Balanced Accuracy      1.0000   1.0000   1.0000   1.0000   1.0000
+</code></pre>
+
+
+<pre><code>## Confusion Matrix and Statistics Testing Set (25% Total Data Set)
+# Confusion Matrix and Statistics
+#
+#          Reference
+# Prediction    A    B    C    D    E
+#         A 1394    5    0    0    0
+#         B    0  943    8    0    0
+#         C    0    1  845    5    0
+#         D    0    0    2  799    2
+#         E    1    0    0    0  899
+</code></pre>
+
+<pre><code>
+#Overall Statistics
+#                                          
+#               Accuracy : 0.9951          
+#                 95% CI : (0.9927, 0.9969)
+#    No Information Rate : 0.2845          
+#    P-Value [Acc > NIR] : < 2.2e-16       
+#                                          
+#                  Kappa : 0.9938          
+# Mcnemar's Test P-Value : NA              
+</code></pre>
+
+<pre><code>
+#Statistics by Class:
+#
+#                     Class: A Class: B Class: C Class: D Class: E
+# Sensitivity            0.9993   0.9937   0.9883   0.9938   0.9978
+# Specificity            0.9986   0.9980   0.9985   0.9990   0.9998
+# Pos Pred Value         0.9964   0.9916   0.9929   0.9950   0.9989
+# Neg Pred Value         0.9997   0.9985   0.9975   0.9988   0.9995
+# Prevalence             0.2845   0.1935   0.1743   0.1639   0.1837
+# Detection Rate         0.2843   0.1923   0.1723   0.1629   0.1833
+# Detection Prevalence   0.2853   0.1939   0.1735   0.1637   0.1835
+# Balanced Accuracy      0.9989   0.9958   0.9934   0.9964   0.9988
+</code></pre>
+</div>
+</body>
+</html>
